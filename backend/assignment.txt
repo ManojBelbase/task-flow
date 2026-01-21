@@ -1,0 +1,142 @@
+Junior Full Stack Engineer -Assignment 
+Overview 
+Time Limit: 1-3 working days 
+Objective: Build a well-structured full-stack application that demonstrates your understanding of TypeScript, modular architecture, services, APIs, authentication, caching, and Docker. 
+You are free to choose the application domain and title. The focus is not on the idea itself, but on how you design and implement modules, services, and infrastructure. 
+Project Scope (Open Choice) 
+You may build any meaningful application 
+• Any CRUD-based system with real-world behavior 
+Note: Application name and UI complexity are not important. Code quality, architecture, and correctness are critical. 
+Mandatory Technology Stack 
+Frontend 
+• 
+Framework: React or Next.js 
+Language: TypeScript (mandatory) 
+Styling: Tailwind CSS/Shadcn/CSS Modules / styled-components 
+State Management: Context API or any state management library 
+API Communication: Fetch / Axios (REST) or Apollo Client (GraphQL) React Query Requirements: 
+Backend 
+О Form validation 
+O Loading & error states 
+Protected routes 
+Responsive UI (mobile friendly) 
+Framework: Node.js or NestJS (TypeScript mandatory) 
+• 
+API Type: REST or GraphQL (GraphQL preferred) 
+Authentication: JWT-based authentication 
+Authorization: Role-based access control 
+Database: PostgreSQL or MongoDB 
+ORM/ODM: TypeORM (PostgreSQL) or Mongoose (MongoDB) Validation: class-validator & class-transformer 
+Caching: Redis or in-memory caching (mandatory) 
+DevOps 
+Docker 
+Docker Compose 
+Git (clear and meaningful commit history) 
+Mandatory Functional Requirements 
+1. Authentication & Authorization 
+User registration (email + password) User login with JWT token generation Protected routes (frontend & backend) Role-based access control 
+Logout functionality 
+2. Core Domain Module (Your Choice) 
+Implement at least one main domain module relevant to your application. 
+Must include: 
+Create 
+Read (with pagination) 
+Update 
+Delete 
+Filtering and/or search 
+Ownership or role-based permissions 
+(e.g., only creator or admin can delete) 
+3. User Management 
+View list of users 
+Assign or relate users to domain entities View user-specific data 
+(e.g., items created or assigned) 
+4. Dashboard / Summary View 
+Create a simple dashboard that displays: 
+Total records 
+Records grouped by status or type Records related to the logged-in user 
+Charts/graphs are optional but encouraged. 
+5. Filtering & Search 
+Filter data by status or category 
+Filter by related user 
+Search by text fields (title, description, etc.) 
+Caching (Mandatory) 
+Your backend must implement caching to improve performance. 
+Requirements 
+Use Redis or in-memory cache 
+Cache read-heavy endpoints, such as: 
+О List endpoints 
+Dashboard/statistics endpoints 
+Implement cache invalidation on: 
+Create 
+O Update 
+О 
+Delete 
+Expectations 
+Proper cache key design 
+TTL (Time-To-Live) usage 
+Clear separation between business logic and cache handling Environment-based cache configuration 
+Backend Architecture Expectations 
+Your backend must demonstrate: 
+Clear module separation (Auth, Users, Core Domain) Services containing business logic 
+DTO-based validation 
+Guards for authentication & authorization 
+Centralized error handling 
+Environment-based configuration 
+Logging (console logs acceptable) 
+Testing Requirements 
+Provide at least 3 unit tests, including: 
+Authentication or authorization logic 
+Core domain service 
+Cache behavior or cache invalidation 
+Database Requirements 
+Proper schema design 
+Entity relationships 
+Indexes for frequently queried fields 
+Migrations (required for SQL databases) 
+Docker Requirements 
+Provide the following: 
+Dockerfile for backend 
+Dockerfile for frontend 
+docker-compose.yml including: 
+Backend service 
+O Frontend service 
+୦ 
+Database service 
+Cache service (Redis if used) 
+The application must run using: 
+docker-compose up 
+Bonus Features (Optional) 
+Both REST and GraphQL APIs Refresh token mechanism 
+WebSockets / real-time updates 
+File uploads 
+Email notifications 
+Swagger (REST) or GraphQL Playground 
+CI/CD pipeline 
+Cloud deployment 
+Additional domain modules 
+Deliverables 
+1. Source Code 
+• Public GitHub repository 
+• Clean, readable code 
+• Meaningful commit messages .env.example file 
+No secrets committed 
+2. README.md (Very Important) 
+Must include: 
+• Project overview 
+• Technology stack Architecture overview 
+Folder structure explanation Database schema diagram 
+API documentation 
+Setup instructions (Docker & local) 
+Design decisions & trade-offs 
+Known limitations 
+Future improvements 
+Screenshots (optional but recommended) 
+3. Submission Instructions 
+Email the GitHub repository link to: 
+@ 
+info@tripnexis.com 
+Include: 
+Full name 
+Contact details 
+Short explanation of your approach Time spent on the assignment 
+End of Assignment Document 
