@@ -29,6 +29,10 @@ export const env = {
         expiresIn: process.env.JWT_EXPIRES_IN || '1d',
     },
     cors: {
-        allowedOrigins: (process.env.ALLOWED_ORIGINS || '').split(',').filter(o => o),
+        allowedOrigins: (process.env.ALLOWED_ORIGINS || '')
+            .split(',')
+            .map(o => o.trim())
+            .filter(o => o),
     }
+
 };

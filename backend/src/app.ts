@@ -14,13 +14,11 @@ app.use(helmet({
 }));
 app.use(cors({
     origin: (origin, callback) => {
-        // Allow requests with no origin (like mobile apps or curl)
-        if (!origin) return callback(null, true);
+        if (!origin) return callback(null, true); // allow mobile apps or curl
 
-        // If no origins specified in env, allow all (default for safety)
-        if (env.cors.allowedOrigins.length === 0) return callback(null, true);
+        if (env.cors.allowedOrigins.length === 0) return callback(null, true); // allow all if empty
 
-        if (env.cors.allowedOrigins.indexOf(origin) !== -1) {
+        if (env.cors.allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -30,6 +28,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
