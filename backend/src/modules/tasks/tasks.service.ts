@@ -17,8 +17,9 @@ export class TasksService {
         });
         const savedTask = await this.taskRepository.save(task);
 
-        // Invalidate dashboard cache
+        // Invalidate dashboard and any list cache for this user
         await CacheService.del(`dashboard:${user.id}`);
+        // We rely on the short 5s TTL for the list to refresh quickly after creation.
 
         return savedTask;
     }
@@ -34,7 +35,7 @@ export class TasksService {
         const cachedData = await CacheService.get(cacheKey);
 
         if (cachedData) {
-            return JSON.parse(cachedData);
+            return typeof cachedData === 'string' ? JSON.parse(cachedData) : cachedData;
         }
 
         const where: any = {};
@@ -49,8 +50,8 @@ export class TasksService {
             where.title = Like(`%${search}%`);
         }
 
-        // RBAC: If not admin, only show own tasks
-        if (user && user.role !== UserRole.ADMIN) {
+        // Always filter by owner's tasks
+        if (user) {
             where.userId = user.id;
         }
 
@@ -59,7 +60,7 @@ export class TasksService {
             take: limit,
             skip: (page - 1) * limit,
             order: { createdAt: 'DESC' },
-            relations: ['user'], // Include creator details
+            relations: ['user'],
         });
 
         const result = {
@@ -72,8 +73,8 @@ export class TasksService {
             },
         };
 
-        // Cache for 60 seconds
-        await CacheService.set(cacheKey, JSON.stringify(result), 60);
+        // Cache for 5 seconds to keep it fresh during rapid changes
+        await CacheService.set(cacheKey, JSON.stringify(result), 5);
 
         return result;
     }
@@ -88,8 +89,8 @@ export class TasksService {
             throw new AppError('Task not found', 404);
         }
 
-        // RBAC: Users can only see their own tasks
-        if (user.role !== UserRole.ADMIN && task.userId !== user.id) {
+        // Always enforce ownership
+        if (task.userId !== user.id) {
             throw new AppError('Forbidden: You do not have access to this task', 403);
         }
 

@@ -1,25 +1,32 @@
-# Build stage (simplified for now as frontend is empty)
+# Build stage
 FROM node:20-alpine AS builder
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Initializing a basic frontend would happen here
-# For now, we assume a standard build output
-# In a real scenario, we'd copy package.json and src
+# Copy package files
+COPY package.json package-lock.json* ./
 
-# COPY package.json pnpm-lock.yaml* ./
-# RUN npm install
-# COPY . .
-# RUN npm run build
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN npm run build
 
 # Production stage
-FROM nginx:stable-alpine
+FROM node:20-alpine
 
-# Copy build output to nginx (placeholder index.html)
-RUN echo "<h1>TaskFlow Frontend Placeholder</h1>" > /usr/share/nginx/html/index.html
+WORKDIR /usr/src/app
 
-# COPY --from=builder /app/dist /usr/share/nginx/html
+# Copy built assets and dependencies
+COPY --from=builder /usr/src/app/public ./public
+COPY --from=builder /usr/src/app/.next ./.next
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/package.json ./package.json
 
-EXPOSE 80
+EXPOSE 3000
 
-CMD ["nginx", "-g", "daemon off;"]
+# Next.js runs on 3000 by default
+CMD ["npm", "start"]

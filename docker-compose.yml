@@ -26,36 +26,46 @@ services:
       - taskflow_net
 
   backend:
-    build: ./backend
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: taskflow_backend
     ports:
       - "5000:5000"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - PORT=5000
-      - DB_HOST=postgres
-      - DB_PORT=5432
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=${DB_HOST:-postgres}
+      - DB_PORT=${DB_PORT:-5432}
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-postgres}
       - DB_NAME=${DB_NAME:-taskflow}
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - UPSTASH_REDIS_REST_URL=${UPSTASH_REDIS_REST_URL}
+      - UPSTASH_REDIS_REST_TOKEN=${UPSTASH_REDIS_REST_TOKEN}
       - JWT_SECRET=${JWT_SECRET:-supersecretkey}
     depends_on:
-      - postgres
-      - redis
-    volumes:
-      - ./backend:/usr/src/app
-      - /usr/src/app/node_modules
+      postgres:
+        condition: service_started
+        required: false
+      redis:
+        condition: service_started
+        required: false
     networks:
       - taskflow_net
-    command: npm run dev
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: taskflow_frontend
     ports:
-      - "3000:80"
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
     networks:
       - taskflow_net
     depends_on:

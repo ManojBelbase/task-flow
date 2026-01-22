@@ -8,7 +8,7 @@ export const roleMiddleware = (roles: UserRole[]) => {
             return next(new AppError('Unauthorized: User not logged in', 401));
         }
 
-        if (!roles.includes(req.user.role)) {
+        if (!roles.some(role => role.toUpperCase() === req.user?.role?.toUpperCase())) {
             return next(new AppError('Forbidden: Insufficient permissions', 403));
         }
 
