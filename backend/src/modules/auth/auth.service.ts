@@ -1,12 +1,24 @@
 import { AppDataSource } from '../../config/data-source';
 import { User, UserRole } from '../../entities/User.entity';
 import { hashPassword, comparePassword } from '../../utils/password';
-import { signToken } from '../../utils/jwt';
+import { signToken, signRefreshToken, verifyRefreshToken } from '../../utils/jwt';
 import { AppError } from '../../middlewares/error.middleware';
 import { AuthCredentialsDto, RegisterDto } from './auth.types';
 
 export class AuthService {
     private static userRepository = AppDataSource.getRepository(User);
+
+    private static async generateTokens(user: User) {
+        const payload = { userId: user.id, role: user.role };
+        const accessToken = signToken(payload);
+        const refreshToken = signRefreshToken(payload);
+
+        // Store refresh token in DB
+        user.refreshToken = refreshToken;
+        await this.userRepository.save(user);
+
+        return { accessToken, refreshToken };
+    }
 
     static async register(data: RegisterDto) {
         const { email, password, name } = data;
@@ -22,14 +34,14 @@ export class AuthService {
             email,
             name,
             password: hashedPassword,
-            role: UserRole.USER, // Default role
+            role: UserRole.USER,
         });
 
         await this.userRepository.save(user);
 
-        const token = signToken({ userId: user.id, role: user.role });
+        const { accessToken, refreshToken } = await this.generateTokens(user);
 
-        return { user, token };
+        return { user, accessToken, refreshToken };
     }
 
     static async login(data: AuthCredentialsDto) {
@@ -45,11 +57,35 @@ export class AuthService {
             throw new AppError('Invalid email or password', 401);
         }
 
-        // Don't return password
         delete (user as { password?: string }).password;
 
-        const token = signToken({ userId: user.id, role: user.role });
+        const { accessToken, refreshToken } = await this.generateTokens(user);
 
-        return { user, token };
+        return { user, accessToken, refreshToken };
+    }
+
+    static async refreshToken(oldRefreshToken: string) {
+        try {
+            const payload = verifyRefreshToken(oldRefreshToken);
+            const user = await this.userRepository.findOne({
+                where: { id: payload.userId },
+                select: ['id', 'role', 'refreshToken']
+            });
+
+            if (!user || user.refreshToken !== oldRefreshToken) {
+                throw new AppError('Invalid refresh token', 401);
+            }
+
+            const newPayload = { userId: user.id, role: user.role };
+            const accessToken = signToken(newPayload);
+            const newRefreshToken = signRefreshToken(newPayload);
+
+            user.refreshToken = newRefreshToken;
+            await this.userRepository.save(user);
+
+            return { accessToken, refreshToken: newRefreshToken };
+        } catch (error) {
+            throw new AppError('Invalid or expired refresh token', 401);
+        }
     }
 }

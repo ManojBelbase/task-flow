@@ -34,7 +34,8 @@ export class DashboardService {
         const recentTasks = await this.taskRepository.find({
             where: { userId: user.id },
             order: { createdAt: 'DESC' },
-            take: 5
+            take: 5,
+            relations: ['user']
         });
 
         // Get Productivity Trend (last 7 days)

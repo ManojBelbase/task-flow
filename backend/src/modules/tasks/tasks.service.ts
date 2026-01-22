@@ -51,6 +51,7 @@ export class TasksService {
         }
 
         // Always filter by owner's tasks
+        // Always filter by owner's tasks
         if (user) {
             where.userId = user.id;
         }
@@ -89,6 +90,7 @@ export class TasksService {
             throw new AppError('Task not found', 404);
         }
 
+        // Always enforce ownership
         // Always enforce ownership
         if (task.userId !== user.id) {
             throw new AppError('Forbidden: You do not have access to this task', 403);

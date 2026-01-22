@@ -26,7 +26,9 @@ export const env = {
     },
     jwt: {
         secret: process.env.JWT_SECRET || 'supersecretkey',
-        expiresIn: process.env.JWT_EXPIRES_IN || '1d',
+        expiresIn: process.env.JWT_EXPIRES_IN || '1h',
+        refreshSecret: process.env.REFRESH_TOKEN_SECRET || 'superrefreshsecretkey',
+        refreshExpiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '7d',
     },
     cors: {
         allowedOrigins: (process.env.ALLOWED_ORIGINS || '')

@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api';
 import { useAuthStore } from '@/store/useAuthStore';
-import { LogIn } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import toast from 'react-hot-toast';
 
-export default function LoginPage() {
+export default function RegisterPage() {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -22,12 +23,12 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            const { data } = await api.post('/auth/login', { email, password });
-            setAuth(data.user, data.token);
-            toast.success('Successfully logged in!');
+            const { data } = await api.post('/auth/register', { name, email, password });
+            setAuth(data.user, data.accessToken, data.refreshToken);
+            toast.success('Account created successfully!');
             router.push('/dashboard');
         } catch (err: any) {
-            toast.error(err.response?.data?.message || 'Failed to login');
+            toast.error(err.response?.data?.message || 'Registration failed');
         } finally {
             setLoading(false);
         }
@@ -38,13 +39,20 @@ export default function LoginPage() {
             <div className="max-w-md w-full p-8 bg-white dark:bg-zinc-900 rounded-md shadow-sm border border-gray-100 dark:border-zinc-800">
                 <div className="flex flex-col items-center mb-8">
                     <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg mb-4">
-                        <LogIn className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                        <UserPlus className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                     </div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome back</h1>
-                    <p className="text-gray-500 dark:text-zinc-400 mt-2 text-sm text-center">Please enter your details to sign in</p>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Create an account</h1>
+                    <p className="text-gray-500 dark:text-zinc-400 mt-2 text-sm text-center">Join TaskFlow to manage your tasks efficiently</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    <Input
+                        label="Full Name"
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="John Doe"
+                    />
                     <Input
                         label="Email address"
                         type="email"
@@ -64,16 +72,17 @@ export default function LoginPage() {
                     <Button
                         type="submit"
                         className="w-full"
+                        variant="primary"
                         isLoading={loading}
                     >
-                        {loading ? 'Logging in...' : 'Sign In'}
+                        {loading ? 'Registering...' : 'Create Account'}
                     </Button>
                 </form>
 
                 <p className="mt-8 text-center text-sm text-gray-600 dark:text-zinc-400">
-                    Don&apos;t have an account?{' '}
-                    <Link href="/register" className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">
-                        Register now
+                    Already have an account?{' '}
+                    <Link href="/login" className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">
+                        Sign In
                     </Link>
                 </p>
             </div>

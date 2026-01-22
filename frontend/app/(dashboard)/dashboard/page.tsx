@@ -3,11 +3,11 @@
 import { LayoutDashboard, CheckCircle2, Circle, Clock, BarChart3, ArrowRight, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useAuthStore } from '@/store/useAuthStore';
-import { useDashboard } from '@/hooks/useDashboard';
+import { useGetDashboardStats } from '@/hooks/useDashboard';
 
 export default function DashboardPage() {
     const { user } = useAuthStore();
-    const { stats, isLoading } = useDashboard();
+    const { stats, isLoading } = useGetDashboardStats();
 
     if (isLoading) {
         return <div className="animate-pulse flex flex-col space-y-4">

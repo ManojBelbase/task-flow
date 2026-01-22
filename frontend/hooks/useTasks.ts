@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "../lib/api";
+import api from "@/lib/api";
 import toast from "react-hot-toast";
-import { useAuthStore } from "../store/useAuthStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export const useGetTasks = (params: { page: number; limit: number; status?: string; search?: string }) => {
     const { user } = useAuthStore();

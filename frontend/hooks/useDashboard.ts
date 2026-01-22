@@ -2,7 +2,7 @@ import api from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 
-export const useDashboard = () => {
+export const useGetDashboardStats = () => {
     const { user } = useAuthStore();
     const { data: stats, isLoading } = useQuery({
         queryKey: ['dashboard-stats', user?.id],
@@ -11,6 +11,5 @@ export const useDashboard = () => {
             return data;
         },
     });
-
     return { stats, isLoading };
 }

@@ -21,3 +21,9 @@ export class AuthCredentialsDto {
     @MinLength(6)
     password!: string;
 }
+
+export class RefreshTokenDto {
+    @IsNotEmpty()
+    @IsString()
+    refreshToken!: string;
+}

@@ -42,6 +42,9 @@ export class User {
     @CreateDateColumn()
     createdAt!: Date;
 
+    @Column({ nullable: true, select: false })
+    refreshToken?: string;
+
     @UpdateDateColumn()
     updatedAt!: Date;
 }
