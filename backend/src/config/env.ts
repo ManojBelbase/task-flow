@@ -28,4 +28,7 @@ export const env = {
         secret: process.env.JWT_SECRET || 'supersecretkey',
         expiresIn: process.env.JWT_EXPIRES_IN || '1d',
     },
+    cors: {
+        allowedOrigins: (process.env.ALLOWED_ORIGINS || '').split(',').filter(o => o),
+    }
 };

@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { env } from './config/env';
 import { errorHandler } from './middlewares/error.middleware';
 import routes from './routes';
 
@@ -12,7 +13,19 @@ app.use(helmet({
     crossOriginResourcePolicy: false, // Allow images/resources from other origins
 }));
 app.use(cors({
-    origin: true, // Reflect request origin
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+
+        // If no origins specified in env, allow all (default for safety)
+        if (env.cors.allowedOrigins.length === 0) return callback(null, true);
+
+        if (env.cors.allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
