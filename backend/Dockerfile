@@ -6,8 +6,12 @@ WORKDIR /usr/src/app
 # Copy package files
 COPY package.json pnpm-lock.yaml* ./
 
-# Install dependencies (using pnpm if lockfile exists, otherwise npm)
-RUN if [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm install; else npm install; fi
+# Install dependencies
+RUN if [ -f pnpm-lock.yaml ]; then \
+      npm install -g pnpm && pnpm install --frozen-lockfile; \
+    else \
+      npm install; \
+    fi
 
 # Copy source code
 COPY . .
@@ -20,13 +24,18 @@ FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
-# Copy built assets and production dependencies
-COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/package.json ./package.json
-COPY --from=builder /usr/src/app/pnpm-lock.yaml* ./
+# Copy package files
+COPY package.json pnpm-lock.yaml* ./
 
-# Re-install only production dependencies
-RUN if [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm install --prod; else npm install --omit=dev; fi
+# Install only production dependencies
+RUN if [ -f pnpm-lock.yaml ]; then \
+      npm install -g pnpm && pnpm install --prod --frozen-lockfile; \
+    else \
+      npm install --omit=dev; \
+    fi
+
+# Copy built assets from builder
+COPY --from=builder /usr/src/app/dist ./dist
 
 EXPOSE 5000
 
