@@ -14,7 +14,7 @@ export const AppDataSource = new DataSource({
     ssl: env.db.ssl ? { rejectUnauthorized: false } : false,
     synchronize: false, // Always use migrations in production
     logging: env.nodeEnv === 'development',
-    entities: [path.join(__dirname, '../entities/*.entity.{ts,js}')],
+    entities: [path.join(__dirname, '../**/*.entity.{ts,js}')],
     migrations: [path.join(__dirname, '../migrations/*.{ts,js}')],
     subscribers: [],
 });
