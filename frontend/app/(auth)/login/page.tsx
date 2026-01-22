@@ -23,7 +23,7 @@ export default function LoginPage() {
 
         try {
             const { data } = await api.post('/auth/login', { email, password });
-            setAuth(data.user, data.accessToken, data.refreshToken);
+            setAuth(data.user, data.accessToken);
             toast.success('Successfully logged in!');
             router.push('/dashboard');
         } catch (err: any) {

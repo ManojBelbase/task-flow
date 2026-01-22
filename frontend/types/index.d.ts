@@ -9,9 +9,8 @@ interface User {
 interface AuthState {
     user: User | null;
     token: string | null;
-    refreshToken: string | null;
     isAuthenticated: boolean;
-    setAuth: (user: User, token: string, refreshToken: string) => void;
+    setAuth: (user: User, token: string) => void;
     logout: () => void;
 }
 

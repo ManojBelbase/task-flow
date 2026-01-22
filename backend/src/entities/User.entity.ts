@@ -39,11 +39,11 @@ export class User {
     @OneToMany(() => Task, (task) => task.user)
     tasks!: Task[];
 
-    @CreateDateColumn()
-    createdAt!: Date;
-
     @Column({ nullable: true, select: false })
     refreshToken?: string;
+
+    @CreateDateColumn()
+    createdAt!: Date;
 
     @UpdateDateColumn()
     updatedAt!: Date;

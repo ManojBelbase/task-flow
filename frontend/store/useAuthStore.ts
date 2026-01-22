@@ -23,25 +23,22 @@ export const useAuthStore = create<AuthState>((set) => {
     };
 
     const token = getInitialToken();
-    const refreshToken = getInitialRefreshToken();
     const user = getInitialUser();
 
     return {
         user,
         token,
-        refreshToken,
         isAuthenticated: !!token,
-        setAuth: (user, token, refreshToken) => {
+        setAuth: (user, token) => {
             localStorage.setItem('token', token);
-            localStorage.setItem('refreshToken', refreshToken);
             localStorage.setItem('user', JSON.stringify(user));
-            set({ user, token, refreshToken, isAuthenticated: true });
+            set({ user, token, isAuthenticated: true });
         },
         logout: () => {
+            console.log('🚪 Logic: Logging out from store...');
             localStorage.removeItem('token');
-            localStorage.removeItem('refreshToken');
             localStorage.removeItem('user');
-            set({ user: null, token: null, refreshToken: null, isAuthenticated: false });
+            set({ user: null, token: null, isAuthenticated: false });
         },
     };
 });
