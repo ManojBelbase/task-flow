@@ -48,7 +48,7 @@ graph TD
     UserMod --> DB
     DashMod --> DB      
     
-    TaskMod --> Cache[(Redis (UPSTASH))]
+    TaskMod --> Cache[(Redis - UPSTASH)]
     DashMod --> Cache
 ```
 
