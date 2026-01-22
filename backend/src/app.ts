@@ -8,8 +8,15 @@ import routes from './routes';
 const app = express();
 
 // Global Middlewares
-app.use(helmet());
-app.use(cors());
+app.use(helmet({
+    crossOriginResourcePolicy: false, // Allow images/resources from other origins
+}));
+app.use(cors({
+    origin: true, // Reflect request origin
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
