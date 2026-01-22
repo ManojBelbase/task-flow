@@ -25,11 +25,27 @@ const startServer = async () => {
         }
     }
 
-    try {
-        // 2. Connect to Redis
-        await connectRedis();
-        Logger.info('⚡ Redis connected successfully');
+    retries = 3; // Reduced retries for faster startup if failing
+    while (retries > 0) {
+        try {
+            // 2. Connect to Redis
+            await connectRedis();
+            Logger.info('⚡ Redis connected successfully');
+            break;
+        } catch (err) {
+            retries -= 1;
+            if (retries > 0) {
+                Logger.warn(`⚠️ Redis connection failed. Retrying... (${retries} left)`);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            } else {
+                Logger.error('❌ Could not connect to Redis. Caching will be disabled.');
+                Logger.info('💡 Tip: Ensure your Redis container is running (docker compose up)');
+                // DO NOT process.exit(1) here - let the server start without cache
+            }
+        }
+    }
 
+    try {
         // 3. Start Express Server
         app.listen(env.port, () => {
             Logger.info(`🚀 Server running on port ${env.port} in ${env.nodeEnv} mode`);

@@ -20,6 +20,10 @@ export const env = {
         host: process.env.REDIS_HOST || '127.0.0.1',
         port: parseInt(process.env.REDIS_PORT || '6379', 10),
     },
+    upstash: {
+        url: process.env.UPSTASH_REDIS_REST_URL,
+        token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    },
     jwt: {
         secret: process.env.JWT_SECRET || 'supersecretkey',
         expiresIn: process.env.JWT_EXPIRES_IN || '1d',
