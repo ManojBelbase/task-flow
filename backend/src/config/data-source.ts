@@ -1,8 +1,6 @@
 import { DataSource } from 'typeorm';
 import { env } from './env';
 import path from 'path';
-import { User } from '../entities/User.entity';
-import { Task } from '../entities/Task.entity';
 
 export const AppDataSource = new DataSource({
     type: 'postgres',
@@ -16,7 +14,7 @@ export const AppDataSource = new DataSource({
     ssl: env.db.ssl ? { rejectUnauthorized: false } : false,
     synchronize: false,
     logging: env.nodeEnv === 'development',
-    entities: [User, Task],
+    entities: [path.join(__dirname, '../**/*.entity.{ts,js}')],
     migrations: [path.join(__dirname, '../migrations/*.{ts,js}')],
     subscribers: [],
 });
