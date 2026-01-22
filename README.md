@@ -43,7 +43,7 @@ graph TD
         Backend --> DashMod[Dashboard Module]
     end
     
-    AuthMod --> DB[(PostgreSQL (NEON DB))]
+    AuthMod --> DB[(PostgreSQL- Neon)]
     TaskMod --> DB
     UserMod --> DB
     DashMod --> DB      

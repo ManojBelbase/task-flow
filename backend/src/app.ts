@@ -38,6 +38,17 @@ app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'ok', message: 'Server is running' });
 });
 
+// Root Route (for easy verification)
+app.get('/', (_req, res) => {
+    res.status(200).json({
+        message: 'Welcome to TaskFlow API',
+        endpoints: {
+            health: '/health',
+            documentation: '/api/docs (if enabled)',
+        }
+    });
+});
+
 // Routes Registration
 app.use('/api', routes);
 
