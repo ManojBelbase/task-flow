@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
         password: env.db.password,
         database: env.db.database,
     }),
-    ssl: { rejectUnauthorized: false },
+    ssl: env.db.ssl ? { rejectUnauthorized: false } : false,
     synchronize: false, // Always use migrations in production
     logging: env.nodeEnv === 'development',
     entities: [path.join(__dirname, '../entities/*.entity.{ts,js}')],

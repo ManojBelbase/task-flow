@@ -43,12 +43,12 @@ graph TD
         Backend --> DashMod[Dashboard Module]
     end
     
-    AuthMod --> DB[(PostgreSQL)]
+    AuthMod --> DB[(PostgreSQL (NEON DB))]
     TaskMod --> DB
     UserMod --> DB
-    DashMod --> DB
+    DashMod --> DB      
     
-    TaskMod --> Cache[(Redis)]
+    TaskMod --> Cache[(Redis (UPSTASH))]
     DashMod --> Cache
 ```
 

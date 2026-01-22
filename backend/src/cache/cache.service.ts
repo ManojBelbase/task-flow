@@ -7,7 +7,7 @@ export class CacheService {
 
     static async set(key: string, value: string, ttl?: number): Promise<void> {
         if (ttl) {
-            await redisClient.set(key, value, { ex: ttl });
+            await redisClient.set(key, value, 'EX', ttl);
         } else {
             await redisClient.set(key, value);
         }

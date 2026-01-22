@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15-alpine
@@ -12,6 +10,11 @@ services:
       POSTGRES_DB: ${DB_NAME:-taskflow}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-taskflow}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - taskflow_net
 
@@ -22,6 +25,11 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - taskflow_net
 
@@ -41,19 +49,15 @@ services:
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-postgres}
       - DB_NAME=${DB_NAME:-taskflow}
+      - DB_SSL=false
       - REDIS_URL=${REDIS_URL}
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
-      - UPSTASH_REDIS_REST_URL=${UPSTASH_REDIS_REST_URL}
-      - UPSTASH_REDIS_REST_TOKEN=${UPSTASH_REDIS_REST_TOKEN}
-      - JWT_SECRET=${JWT_SECRET:-supersecretkey}
     depends_on:
       postgres:
-        condition: service_started
-        required: false
+        condition: service_healthy
       redis:
-        condition: service_started
-        required: false
+        condition: service_healthy
     networks:
       - taskflow_net
 
@@ -69,7 +73,8 @@ services:
     networks:
       - taskflow_net
     depends_on:
-      - backend
+      backend:
+        condition: service_started
 
 volumes:
   postgres_data:
