@@ -21,7 +21,6 @@ export class Task {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
-    // Explicit column type
     @Column({ type: 'varchar' })
     title!: string;
 
@@ -37,7 +36,7 @@ export class Task {
     status!: TaskStatus;
 
     @Index()
-    @Column({ type: 'uuid' }) // Explicit type for UUID
+    @Column({ type: 'uuid' })
     userId!: string;
 
     @ManyToOne(() => User, (user) => user.tasks, { onDelete: 'CASCADE' })

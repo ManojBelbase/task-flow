@@ -8,15 +8,14 @@ import routes from './routes';
 
 const app = express();
 
-// Global Middlewares
 app.use(helmet({
-    crossOriginResourcePolicy: false, // Allow images/resources from other origins
+    crossOriginResourcePolicy: false,
 }));
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin) return callback(null, true); // allow mobile apps or curl
+        if (!origin) return callback(null, true);
 
-        if (env.cors.allowedOrigins.length === 0) return callback(null, true); // allow all if empty
+        if (env.cors.allowedOrigins.length === 0) return callback(null, true);
 
         if (env.cors.allowedOrigins.includes(origin)) {
             callback(null, true);
@@ -32,12 +31,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health Check
 app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'ok', message: 'Server is running' });
 });
-
-// Root Route (for easy verification)
 app.get('/', (_req, res) => {
     res.status(200).json({
         message: 'Welcome to TaskFlow API',
@@ -48,10 +44,8 @@ app.get('/', (_req, res) => {
     });
 });
 
-// Routes Registration
 app.use('/api', routes);
 
-// Global Error Handler
 app.use(errorHandler);
 
 export default app;

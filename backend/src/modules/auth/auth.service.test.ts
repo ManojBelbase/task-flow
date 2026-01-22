@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import * as passwordUtils from '../../utils/password';
 import * as jwtUtils from '../../utils/jwt';
 
-// Define mocks BEFORE importing the service
 const mockUserRepository = {
     findOneBy: jest.fn(),
     create: jest.fn(),

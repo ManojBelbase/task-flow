@@ -13,7 +13,6 @@ export class AuthService {
         const accessToken = signToken(payload);
         const refreshToken = signRefreshToken(payload);
 
-        // Store refresh token in DB
         user.refreshToken = refreshToken;
         await this.userRepository.save(user);
 

@@ -13,14 +13,12 @@ const useUpstash = !!(env.upstash.url && env.upstash.token);
 
 const createClient = (): UnifiedRedisClient => {
     if (useUpstash) {
-        console.log('Using Upstash Redis (HTTP)');
         return new UpstashRedis({
             url: env.upstash.url!,
             token: env.upstash.token!,
         }) as unknown as UnifiedRedisClient;
     }
 
-    console.log('Using local Redis (TCP)');
     const client = new IORedis({
         host: env.redis.host,
         port: env.redis.port,
