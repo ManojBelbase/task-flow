@@ -2,7 +2,6 @@ import { Redis as UpstashRedis } from '@upstash/redis';
 import IORedis from 'ioredis';
 import { env } from './env';
 
-// Unified interface for Redis operations needed by the app
 interface UnifiedRedisClient {
     get(key: string): Promise<string | null>;
     set(key: string, value: string, ...args: any[]): Promise<any>;

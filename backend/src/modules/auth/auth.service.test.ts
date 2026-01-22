@@ -36,11 +36,13 @@ describe('AuthService', () => {
             mockUserRepository.save.mockResolvedValue({ id: 'uuid', ...registerDto, role: UserRole.USER });
             (jwtUtils.signToken as jest.Mock).mockReturnValue('mock-token');
 
+            (jwtUtils.signRefreshToken as jest.Mock).mockReturnValue('mock-refresh-token');
+
             const result = await AuthService.register(registerDto);
 
             expect(result.user.email).toBe(registerDto.email);
             expect(mockUserRepository.save).toHaveBeenCalled();
-            expect(result.token).toBe('mock-token');
+            expect(result.accessToken).toBe('mock-token');
         });
     });
 });
