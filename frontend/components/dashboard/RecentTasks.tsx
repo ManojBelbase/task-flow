@@ -36,7 +36,7 @@ export default function RecentTasks() {
         <div className="bg-white dark:bg-zinc-900 p-4 rounded-md border border-gray-100 dark:border-zinc-800 shadow-sm flex flex-col h-[400px]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between  mb-6 gap-2">
                 <h3 className="text-lg w-full font-semibold text-gray-900 dark:text-white">Recent Tasks</h3>
-                <Input
+                {/* <Input
                     type="date"
                     value={selectedDate}
                     onChange={(e) => {
@@ -44,7 +44,7 @@ export default function RecentTasks() {
                         setPage(1);
                     }}
                     className="w-full sm:w-auto h-8 text-xs py-1 rounded-sm"
-                />
+                /> */}
             </div>
 
             <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar hide-scrollbar">

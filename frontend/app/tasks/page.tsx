@@ -189,7 +189,7 @@ export default function TasksPage() {
                             />
                         </div>
                     </div>
-                    <div className="w-full sm:w-auto">
+                    {/* <div className="w-full sm:w-auto">
                         <Input
                             type="date"
                             value={date}
@@ -199,7 +199,7 @@ export default function TasksPage() {
                             }}
                             className="w-full sm:w-40"
                         />
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
