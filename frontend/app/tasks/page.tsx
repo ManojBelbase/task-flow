@@ -1,31 +1,45 @@
-'use client';
-import { useState } from 'react';
-import { useGetTasks, useCreateTask, useUpdateTask, useDeleteTask } from '@/hooks/useTasks';
-import { Plus, Search, Filter, CheckCircle2, Clock, Circle } from 'lucide-react';
-import TaskModal from '@/components/task/TaskModal';
-import ViewTaskModal from '@/components/task/ViewTaskModal';
-import ConfirmModal from '@/components/ConfirmModal';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import CustomSelect from '@/components/ui/CustomSelect';
-import DataTable, { Column } from '@/components/ui/DataTable';
+"use client";
+import { useState } from "react";
+import {
+    useGetTasks,
+    useCreateTask,
+    useUpdateTask,
+    useDeleteTask,
+} from "@/hooks/useTasks";
+import {
+    Plus,
+    Search,
+    Filter,
+    CheckCircle2,
+    Clock,
+    Circle,
+} from "lucide-react";
+import TaskModal from "@/components/task/TaskModal";
+import ViewTaskModal from "@/components/task/ViewTaskModal";
+import ConfirmModal from "@/components/ConfirmModal";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import CustomSelect from "@/components/ui/CustomSelect";
+import DataTable, { Column } from "@/components/ui/DataTable";
 
 export default function TasksPage() {
     const [page, setPage] = useState(1);
-    const [status, setStatus] = useState('');
-    const [search, setSearch] = useState('');
-    const [date, setDate] = useState('');
+    const [status, setStatus] = useState("");
+    const [search, setSearch] = useState("");
+    const [date, setDate] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedTask, setSelectedTask] = useState<any>(null);
-    const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view'>('create');
+    const [modalMode, setModalMode] = useState<"create" | "edit" | "view">(
+        "create",
+    );
 
     const { data, isLoading } = useGetTasks({
         page,
         limit: 10,
         status: status || undefined,
         search: search || undefined,
-        date: date || undefined
+        date: date || undefined,
     });
 
     const createMutation = useCreateTask();
@@ -33,23 +47,18 @@ export default function TasksPage() {
     const deleteMutation = useDeleteTask();
 
     const handleCreate = (formData: any) => {
-        const mappedData = {
-            ...formData,
-            status: formData.status === 'TODO' ? 'pending' : formData.status.toLowerCase().replace(' ', '_')
-        };
-        createMutation.mutate(mappedData, {
-            onSuccess: () => setIsModalOpen(false)
+        createMutation.mutate(formData, {
+            onSuccess: () => setIsModalOpen(false),
         });
     };
 
     const handleUpdate = (formData: any) => {
-        const mappedData = {
-            ...formData,
-            status: formData.status === 'TODO' ? 'pending' : formData.status.toLowerCase().replace(' ', '_')
-        };
-        updateMutation.mutate({ id: selectedTask.id, ...mappedData }, {
-            onSuccess: () => setIsModalOpen(false)
-        });
+        updateMutation.mutate(
+            { id: selectedTask.id, ...formData },
+            {
+                onSuccess: () => setIsModalOpen(false),
+            },
+        );
     };
 
     const handleDelete = () => {
@@ -58,26 +67,26 @@ export default function TasksPage() {
                 onSuccess: () => {
                     setIsDeleteModalOpen(false);
                     setSelectedTask(null);
-                }
+                },
             });
         }
     };
 
     const openCreateModal = () => {
         setSelectedTask(null);
-        setModalMode('create');
+        setModalMode("create");
         setIsModalOpen(true);
     };
 
     const openEditModal = (task: any) => {
         setSelectedTask(task);
-        setModalMode('edit');
+        setModalMode("edit");
         setIsModalOpen(true);
     };
 
     const openViewModal = (task: any) => {
         setSelectedTask(task);
-        setModalMode('view');
+        setModalMode("view");
         setIsModalOpen(true);
     };
 
@@ -88,41 +97,59 @@ export default function TasksPage() {
 
     const columns: Column<any>[] = [
         {
-            header: 'Title',
-            accessorKey: 'title',
+            header: "Title",
+            accessorKey: "title",
             cell: (task) => (
                 <div>
-                    <span className="font-medium text-gray-900 dark:text-white block truncate max-w-[200px]">{task.title}</span>
+                    <span className="font-medium text-gray-900 dark:text-white block truncate max-w-[200px]">
+                        {task.title}
+                    </span>
                 </div>
-            )
+            ),
         },
         {
-            header: 'Status',
-            accessorKey: 'status',
+            header: "Status",
+            accessorKey: "status",
             cell: (task) => {
                 switch (task.status) {
-                    case 'completed':
-                        return <div className="flex items-center text-green-600"><CheckCircle2 className="w-4 h-4 mr-2" /> Completed</div>;
-                    case 'in_progress':
-                        return <div className="flex items-center text-amber-600"><Clock className="w-4 h-4 mr-2" /> In Progress</div>;
+                    case "completed":
+                        return (
+                            <div className="flex items-center text-green-600">
+                                <CheckCircle2 className="w-4 h-4 mr-2" /> Completed
+                            </div>
+                        );
+                    case "in_progress":
+                        return (
+                            <div className="flex items-center text-amber-600">
+                                <Clock className="w-4 h-4 mr-2" /> In Progress
+                            </div>
+                        );
                     default:
-                        return <div className="flex items-center text-gray-500"><Circle className="w-4 h-4 mr-2" /> Pending</div>;
+                        return (
+                            <div className="flex items-center text-gray-500">
+                                <Circle className="w-4 h-4 mr-2" /> Pending
+                            </div>
+                        );
                 }
-            }
+            },
         },
         {
-            header: 'Created At',
-            accessorKey: 'createdAt',
-            cell: (task) => new Date(task.createdAt).toLocaleDateString()
-        }
+            header: "Created At",
+            accessorKey: "createdAt",
+            cell: (task) => new Date(task.createdAt).toLocaleDateString(),
+        },
     ];
 
     return (
         <div className="space-y-6 pb-20">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Tasks</h2>
-                    <p className="text-gray-500 dark:text-zinc-400 text-sm">Manage and track your project tasks efficiently</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                        Your Tasks
+                    </h2>
+                    <p className="text-gray-500 dark:text-zinc-400 text-sm">
+                        Manage and track your project tasks efficiently
+                    </p>
                 </div>
                 <Button
                     onClick={openCreateModal}
@@ -149,10 +176,10 @@ export default function TasksPage() {
                         <div className="w-48">
                             <CustomSelect
                                 options={[
-                                    { label: 'All Statuses', value: '' },
-                                    { label: 'To Do', value: 'pending' },
-                                    { label: 'In Progress', value: 'in_progress' },
-                                    { label: 'Completed', value: 'completed' },
+                                    { label: "All Statuses", value: "" },
+                                    { label: "To Do", value: "pending" },
+                                    { label: "In Progress", value: "in_progress" },
+                                    { label: "Completed", value: "completed" },
                                 ]}
                                 value={status}
                                 onChange={(val) => {
@@ -186,11 +213,11 @@ export default function TasksPage() {
                 pagination={{
                     currentPage: page,
                     totalPages: data?.meta?.totalPages || 1,
-                    onPageChange: setPage
+                    onPageChange: setPage,
                 }}
             />
 
-            {modalMode === 'view' ? (
+            {modalMode === "view" ? (
                 <ViewTaskModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
@@ -202,7 +229,7 @@ export default function TasksPage() {
                     onClose={() => setIsModalOpen(false)}
                     onSubmit={selectedTask ? handleUpdate : handleCreate}
                     initialData={selectedTask}
-                    title={modalMode === 'create' ? 'Create New Task' : 'Edit Task'}
+                    title={modalMode === "create" ? "Create New Task" : "Edit Task"}
                 />
             )}
 

@@ -23,10 +23,8 @@ export default function DashboardPage() {
     const handleCreate = async (taskData: any) => {
         try {
             await createTaskMutation.mutateAsync(taskData);
-            toast.success('Task created successfully!');
             setIsModalOpen(false);
         } catch (error) {
-            toast.error('Failed to create task');
         }
     };
 

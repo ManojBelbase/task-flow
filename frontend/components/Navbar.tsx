@@ -109,7 +109,7 @@ export default function Navbar() {
                         )}
                         <div className="border-t border-gray-200 dark:border-zinc-800 my-2 pt-2">
                             <div className="flex items-center px-3 mb-2">
-                                <div className="ml-3">
+                                <div className="">
                                     <div className="text-base font-medium leading-none text-gray-800 dark:text-white">{user?.name}</div>
                                     <div className="text-sm font-medium leading-none text-gray-500 dark:text-gray-400 mt-1">{user?.email}</div>
                                 </div>

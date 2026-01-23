@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsEnum } from 'class-validator';
+import { TaskStatus } from '../../../entities/Task.entity';
 
 export class CreateTaskDto {
     @IsNotEmpty()
@@ -8,4 +9,8 @@ export class CreateTaskDto {
     @IsOptional()
     @IsString()
     description?: string;
+
+    @IsOptional()
+    @IsEnum(TaskStatus)
+    status?: TaskStatus;
 }

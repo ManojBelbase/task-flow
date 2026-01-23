@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import CustomSelect from '@/components/ui/CustomSelect';
+import { useState, useEffect } from "react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 interface TaskModalProps {
     isOpen: boolean;
@@ -14,29 +14,32 @@ interface TaskModalProps {
     title: string;
 }
 
-export default function TaskModal({ isOpen, onClose, onSubmit, initialData, title }: TaskModalProps) {
+export default function TaskModal({
+    isOpen,
+    onClose,
+    onSubmit,
+    initialData,
+    title,
+}: TaskModalProps) {
     const [formData, setFormData] = useState({
-        title: '',
-        description: '',
-        status: 'TODO',
+        title: "",
+        description: "",
+        status: "pending",
     });
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (initialData) {
-            let mappedStatus = 'TODO';
-            if (initialData.status === 'pending') mappedStatus = 'TODO';
-            else if (initialData.status === 'in_progress') mappedStatus = 'IN_PROGRESS';
-            else if (initialData.status === 'completed') mappedStatus = 'COMPLETED';
-            else mappedStatus = initialData.status;
+
+            const mappedStatus = initialData.status || "pending";
 
             setFormData({
-                title: initialData.title || '',
-                description: initialData.description || '',
+                title: initialData.title || "",
+                description: initialData.description || "",
                 status: mappedStatus,
             });
         } else {
-            setFormData({ title: '', description: '', status: 'TODO' });
+            setFormData({ title: "", description: "", status: "pending" });
         }
         setIsLoading(false);
     }, [initialData, isOpen]);
@@ -54,17 +57,22 @@ export default function TaskModal({ isOpen, onClose, onSubmit, initialData, titl
     };
 
     const statusOptions = [
-        { label: 'To Do', value: 'TODO' },
-        { label: 'In Progress', value: 'IN_PROGRESS' },
-        { label: 'Completed', value: 'COMPLETED' },
+        { label: "To Do", value: "pending" },
+        { label: "In Progress", value: "in_progress" },
+        { label: "Completed", value: "completed" },
     ];
 
     return (
         <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="bg-white dark:bg-zinc-900 w-full max-w-2xl rounded-md shadow-xl border border-gray-100 dark:border-zinc-800 overflow-hidden transform animate-in slide-in-from-bottom-4 duration-300">
                 <div className="flex justify-between items-center p-6 border-b border-gray-100 dark:border-zinc-800">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h3>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md transition-colors text-gray-400">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                        {title}
+                    </h3>
+                    <button
+                        onClick={onClose}
+                        className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-md transition-colors text-gray-400"
+                    >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
@@ -74,7 +82,9 @@ export default function TaskModal({ isOpen, onClose, onSubmit, initialData, titl
                         label="Title"
                         required
                         value={formData.title}
-                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        onChange={(e) =>
+                            setFormData({ ...formData, title: e.target.value })
+                        }
                         placeholder="e.g. Finish the Q1 project presentation"
                         className="text-lg font-medium"
                     />
@@ -91,11 +101,15 @@ export default function TaskModal({ isOpen, onClose, onSubmit, initialData, titl
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1.5">Description</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1.5">
+                            Description
+                        </label>
                         <textarea
                             className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-gray-900 dark:text-white min-h-[180px] resize-none text-sm leading-relaxed"
                             value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            onChange={(e) =>
+                                setFormData({ ...formData, description: e.target.value })
+                            }
                             placeholder="Add comprehensive details about this task..."
                         />
                     </div>
@@ -110,12 +124,14 @@ export default function TaskModal({ isOpen, onClose, onSubmit, initialData, titl
                         >
                             Cancel
                         </Button>
-                        <Button
-                            type="submit"
-                            className="flex-1"
-                            isLoading={isLoading}
-                        >
-                            {isLoading ? (initialData ? 'Updating...' : 'Creating...') : (initialData ? 'Update Task' : 'Create Task')}
+                        <Button type="submit" className="flex-1" isLoading={isLoading}>
+                            {isLoading
+                                ? initialData
+                                    ? "Updating..."
+                                    : "Creating..."
+                                : initialData
+                                    ? "Update Task"
+                                    : "Create Task"}
                         </Button>
                     </div>
                 </form>
