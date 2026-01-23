@@ -2,15 +2,22 @@
  
 TaskFlow is a robust, full-stack application designed for efficient task management with secure authentication, role-based access control (RBAC), and real-time dashboard analytics.
  
-## 🚀 Project Overview
+
+
+## Project Overview
  
 TaskFlow provides a seamless experience for users to manage their daily tasks while offering administrators powerful tools to oversee the entire platform. The system is built with a focus on performance, scalability, and clean code principles.
  
 ---
+
+## Live Demo
+- **Live Site:** [https://taskflow-frontend-url.vercel.app/](https://taskflow-frontend-url.vercel.app/)
+
+---
+
+##  Quick Start (Setup Instructions)
  
-## ⚡ Quick Start (Setup Instructions)
- 
-### 🐳 Option 1: Running with Docker (Recommended)
+### Option 1: Running with Docker (Recommended)
  
 The easiest way to get the app running with all dependencies (PostgreSQL, Redis) pre-configured.
  
@@ -23,7 +30,7 @@ The easiest way to get the app running with all dependencies (PostgreSQL, Redis)
    - **Frontend:** [http://localhost:3000](http://localhost:3000)
    - **Backend API:** [http://localhost:5000/api](http://localhost:5000/api)
  
-### 💻 Option 2: Running Locally (Without Docker)
+### Option 2: Running Locally (Without Docker)
  
 Use this if you prefer to run services individually or use external databases.
  
@@ -42,7 +49,7 @@ Use this if you prefer to run services individually or use external databases.
  
 ---
  
-## 👤 Default Admin Credentials
+## Default Admin Credentials
  
 An admin account is automatically created on startup:
  
@@ -51,7 +58,7 @@ An admin account is automatically created on startup:
  
 ---
  
-## 🛠️ Technology Stack
+## Technology Stack
  
 ### Frontend
  
@@ -84,7 +91,7 @@ An admin account is automatically created on startup:
  
 ---
  
-## 🏗️ Architecture Overview
+##  Architecture Overview
  
 The system follows a **Modular Clean Architecture**, which decouples feature logic into self-contained modules.
  
@@ -110,35 +117,41 @@ graph TD
 ```
  
 ### Folder Structure
- 
+
 ```text
 project-root/
 ├── backend/
 │   ├── src/
-│   │   ├── config/           # App, Database & Redis configuration
+│   │   ├── config/           # App, Database, Redis & Swagger config
 │   │   ├── modules/          # Feature-based modular logic
-│   │   │   ├── auth/         # Authentication & RBAC
-│   │   │   ├── tasks/        # Task management domain
-│   │   │   ├── users/        # User administration
-│   │   │   └── dashboard/    # Analytics & Aggregations
-│   │   ├── entities/         # TypeORM Database Models
-│   │   ├── middlewares/      # Auth, Error handling, Validation
-│   │   └── utils/            # JWT, Logger, Hashing
+│   │   │   ├── auth/         # Authentication (Login, Register, Refresh)
+│   │   │   ├── tasks/        # Task CRUD & Filtering
+│   │   │   ├── users/        # User management
+│   │   │   └── dashboard/    # Analytics & Aggregation logic
+│   │   ├── entities/         # TypeORM Entities (User, Task)
+│   │   ├── middlewares/      # AuthGuard, ErrorHandler
+│   │   ├── utils/            # Helpers (AppError, catchAsync)
+│   │   ├── cache/            # Redis Service wrapper
+│   │   └── migrations/       # Database migrations
 ├── frontend/
-│   ├── app/                  # Next.js App Router (Pages & Layouts)
-│   ├── components/           # Reusable UI components
-│   │   ├── ui/               # Generic UI elements (Button, Input)
-│   │   └── ...               # Domain components (Navbar, TaskModal)
-│   ├── hooks/                # Custom React hooks (useAuth, useTasks)
-│   ├── store/                # Zustand global state (Auth)
-│   ├── lib/                  # API client (Axios) configuration
-│   └── types/                # Global TypeScript definitions
-└── docker-compose.yml        # Orchestration for the entire stack
+│   ├── app/                  # Next.js App Router Pages
+│   │   ├── (auth)/           # Login/Register pages
+│   │   └── (dashboard)/      # Dashboard & Task pages
+│   ├── components/
+│   │   ├── ui/               # Generic UI (Button, Input, DataTable, Pagination)
+│   │   ├── Navbar.tsx        # Navigation & User Dropdown
+│   │   ├── TaskModal.tsx     # Create/Edit Form Modal
+│   │   └── ViewTaskModal.tsx # Read-only Detailed View Modal
+│   ├── hooks/                # React Query Hooks (useTasks, useAuth)
+│   ├── store/                # Zustand Stores
+│   ├── lib/                  # Utils & API setup
+│   └── types/                # TypeScript Interfaces
+└── docker-compose.yml        # Multi-container setup
 ```
  
 ---
  
-## 📊 Database Schema
+## Database Schema
  
 ```mermaid
 erDiagram
@@ -166,7 +179,7 @@ erDiagram
  
 ---
  
-## 📡 API Documentation (Summary)
+## API Documentation (Summary)
  
 | Method | Endpoint               | Description                               | Auth       |
 | ------ | ---------------------- | ----------------------------------------- | ---------- |
@@ -182,6 +195,31 @@ erDiagram
 | DELETE | `/api/users/:id`       | Delete a user                             | Admin      |
  
 ---
+
+## Project Flow
+
+The application follows a simple yet secure workflow:
+
+1.  **Authentication**:
+    - Users register or login via the secure Auth page.
+    - Upon success, an HTTP-only Refresh Token and a short-lived Access Token are issued.
+    - The `useAuth` hook manages the session and auto-refreshes tokens silently.
+
+2.  **Dashboard**:
+    - After login, users land on the Dashboard.
+    - **Stats**: View real-time aggregated data (Pending, Completed, Productivity Trend).
+    - **Quick Actions**: Create a new task immediately via the "Quick Task" button.
+    - **Visuals**: A Pie Chart visualizes the distribution of tasks by status.
+
+3.  **Task Management**:
+    - Users navigate to the "Your Tasks" page.
+    - **Data Table**: Tasks are displayed in a rich table with sorting and pagination.
+    - **Actions**:
+        - **View**: Click the eye icon to see full details in a read-only modal.
+        - **Edit**: Click the pencil icon to modify the task.
+        - **Delete**: Click the trash icon to remove a task (with confirmation).
+    - **Filtering**: Filter tasks by Status or Creation Date to find what matters.
+
  
 ## 🧠 Design Decisions & Trade-offs
  

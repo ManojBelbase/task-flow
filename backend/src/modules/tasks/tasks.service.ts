@@ -29,9 +29,10 @@ export class TasksService {
         limit: number = 10,
         status?: TaskStatus,
         search?: string,
+        date?: string,
         user?: User
     ) {
-        const cacheKey = `tasks:list:${user?.id}:${page}:${limit}:${status || 'all'}:${search || 'none'}`;
+        const cacheKey = `tasks:list:${user?.id}:${page}:${limit}:${status || 'all'}:${search || 'none'}:${date || 'all'}`;
         const cachedData = await CacheService.get(cacheKey);
 
         if (cachedData) {
@@ -48,6 +49,23 @@ export class TasksService {
         // Filter by search text (title or description)
         if (search) {
             where.title = Like(`%${search}%`);
+        }
+
+        // Filter by specific date
+        if (date) {
+            const startDate = new Date(date);
+            startDate.setHours(0, 0, 0, 0);
+
+            const endDate = new Date(date);
+            endDate.setHours(23, 59, 59, 999);
+
+            // Assuming TypeORM. We need to import Between if not present, or use raw query. 
+            // Since we are using FindOptions, we can use Between.
+            // Let's check imports first or assume we need to import it.
+            // I'll use Raw to be safe with timezone issues or just simple Between.
+            // Let's use Between from typeorm.
+            const { Between } = require('typeorm');
+            where.createdAt = Between(startDate, endDate);
         }
 
         // Always filter by owner's tasks

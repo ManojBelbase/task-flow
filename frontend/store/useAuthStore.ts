@@ -17,10 +17,7 @@ export const useAuthStore = create<AuthState>((set) => {
         return localStorage.getItem('token');
     };
 
-    const getInitialRefreshToken = () => {
-        if (typeof window === 'undefined') return null;
-        return localStorage.getItem('refreshToken');
-    };
+
 
     const token = getInitialToken();
     const user = getInitialUser();
@@ -29,14 +26,17 @@ export const useAuthStore = create<AuthState>((set) => {
         user,
         token,
         isAuthenticated: !!token,
-        setAuth: (user, token) => {
+        setAuth: (user: User, token: string, refreshToken?: string) => {
             localStorage.setItem('token', token);
+            if (refreshToken) {
+                localStorage.setItem('refreshToken', refreshToken);
+            }
             localStorage.setItem('user', JSON.stringify(user));
             set({ user, token, isAuthenticated: true });
         },
         logout: () => {
-            console.log('🚪 Logic: Logging out from store...');
             localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
             localStorage.removeItem('user');
             set({ user: null, token: null, isAuthenticated: false });
         },

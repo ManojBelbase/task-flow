@@ -31,7 +31,6 @@ export default function UsersPage() {
         }
     };
 
-    /* ---------------- LOADING ---------------- */
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center py-20 space-y-4">
@@ -43,7 +42,6 @@ export default function UsersPage() {
         );
     }
 
-    /* ---------------- ERROR ---------------- */
     if (error) {
         const isForbidden = (error as any)?.response?.status === 403;
         return (

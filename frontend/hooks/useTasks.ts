@@ -3,7 +3,7 @@ import api from "@/lib/api";
 import toast from "react-hot-toast";
 import { useAuthStore } from "@/store/useAuthStore";
 
-export const useGetTasks = (params: { page: number; limit: number; status?: string; search?: string }) => {
+export const useGetTasks = (params: { page: number; limit: number; status?: string; search?: string, date?: string }) => {
     const { user } = useAuthStore();
     return useQuery({
         queryKey: ["tasks", user?.id, params],

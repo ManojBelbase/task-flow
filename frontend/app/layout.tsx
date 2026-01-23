@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import Providers from "@/lib/providers";
+import ClientLayout from "@/components/ClientLayout";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +32,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          {children}
+          <ClientLayout>
+            {children}
+          </ClientLayout>
+          {/* Toaster should be here or inside ClientLayout, usually here is fine */}
         </Providers>
       </body>
     </html>

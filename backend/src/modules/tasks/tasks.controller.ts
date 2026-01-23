@@ -30,8 +30,9 @@ export class TasksController {
             const limit = parseInt(req.query.limit as string) || 10;
             const status = req.query.status as TaskStatus;
             const search = req.query.search as string;
+            const date = req.query.date as string;
 
-            const result = await TasksService.findAll(page, limit, status, search, req.user);
+            const result = await TasksService.findAll(page, limit, status, search, date, req.user);
             res.status(200).json(result);
         } catch (error) {
             next(error);

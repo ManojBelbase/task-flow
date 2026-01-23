@@ -24,10 +24,16 @@ export default function TaskModal({ isOpen, onClose, onSubmit, initialData, titl
 
     useEffect(() => {
         if (initialData) {
+            let mappedStatus = 'TODO';
+            if (initialData.status === 'pending') mappedStatus = 'TODO';
+            else if (initialData.status === 'in_progress') mappedStatus = 'IN_PROGRESS';
+            else if (initialData.status === 'completed') mappedStatus = 'COMPLETED';
+            else mappedStatus = initialData.status;
+
             setFormData({
                 title: initialData.title || '',
                 description: initialData.description || '',
-                status: initialData.status || 'TODO',
+                status: mappedStatus,
             });
         } else {
             setFormData({ title: '', description: '', status: 'TODO' });
